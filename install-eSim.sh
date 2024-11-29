@@ -169,8 +169,16 @@ function installDependency
 
     echo "Installing SandPiper Saas.................."
     pip3 install sandpiper-saas
-    # Installing main application dependencies
-    pip3 install PyQt5 matplotlib 
+
+
+    echo "Installing Hdlparse......................"
+    pip3 install hdlparse
+
+    echo "Installing matplotlib................"
+    pip3 install matplotlib
+
+    echo "Installing PyQt5............."
+    pip3 install PyQt5  
 }
 
 
@@ -212,7 +220,7 @@ function copyKicadLibrary
 function createDesktopStartScript
 {    
 
-	# Generating new esim-start.sh
+    # Generating new esim-start.sh
     echo '#!/bin/bash' > esim-start.sh
     echo "cd $eSim_Home/src/frontEnd" >> esim-start.sh
     echo "source $config_dir/env/bin/activate" >> esim-start.sh
@@ -365,12 +373,11 @@ elif [ $option == "--uninstall" ];then
         echo "Removing KiCad..........................."
         sudo apt purge -y kicad kicad-footprints kicad-libraries kicad-symbols kicad-templates
         sudo rm -rf /usr/share/kicad
+	sudo rm /etc/apt/sources.list.d/kicad*
         rm -rf $HOME/.config/kicad/6.0
 
-        echo "Removing Makerchip......................."
-        pip3 uninstall -y hdlparse
-        pip3 uninstall -y makerchip-app
-        pip3 uninstall -y sandpiper-saas
+        echo "Removing Virtual env......................."
+        sudo rm -r $config_dir/env
 
         echo "Removing SKY130 PDK......................"
         sudo rm -R /usr/share/local/sky130_fd_pr
