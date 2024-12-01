@@ -58,6 +58,7 @@ function createConfigFile
     sudo apt install python3-virtualenv
     virtualenv $config_dir/env
     source $config_dir/env/bin/activate
+    pip install --upgrade pip
 }
 
 
