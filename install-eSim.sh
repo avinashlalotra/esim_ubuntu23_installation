@@ -54,11 +54,7 @@ function createConfigFile
     echo "IMAGES = %(eSim_HOME)s/images" >> $config_dir/$config_file
     echo "VERSION = %(eSim_HOME)s/VERSION" >> $config_dir/$config_file
     echo "MODELICA_MAP_JSON = %(eSim_HOME)s/library/ngspicetoModelica/Mapping.json" >> $config_dir/$config_file
-   # Creating a virtual envirionment as Ubuntu 23 and 24 doesn't support system wide package installation 
-    sudo apt install python3-virtualenv
-    virtualenv $config_dir/env
-    source $config_dir/env/bin/activate
-    pip install --upgrade pip
+   
 }
 
 
@@ -133,12 +129,24 @@ function installDependency
     set +e      # Temporary disable exit on error
     trap "" ERR # Do not trap on error of any command
 
-	# Update apt repository
-	echo "Updating apt index files..................."
+    # Update apt repository
+    echo "Updating apt index files..................."
     sudo apt-get update
     
     set -e      # Re-enable exit on error
     trap error_exit ERR
+    
+    echo "Instaling virtualenv......................."
+    sudo apt install python3-virtualenv
+   
+    echo "Creating virtual environment to isolate packages "
+    virtualenv $config_dir/env
+    
+    echo "Starting the virtual env..................."
+    source $config_dir/env/bin/activate
+
+    echo "Upgrading Pip.............................."
+    pip install --upgrade pip
     
     echo "Installing Xterm..........................."
     sudo apt-get install -y xterm
@@ -171,7 +179,7 @@ function installDependency
     echo "Installing SandPiper Saas.................."
     pip3 install sandpiper-saas
 
-
+   
     echo "Installing Hdlparse......................"
     pip3 install hdlparse
 
