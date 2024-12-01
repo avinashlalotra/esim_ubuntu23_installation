@@ -89,16 +89,16 @@ function installSky130Pdk
     tar -xJf library/sky130_fd_pr.tar.xz
 
     # Remove any previous sky130-fd-pdr instance, if any
-    sudo rm -rf /usr/share/local/sky130_fd_pr
+    rm -rf /usr/share/local/sky130_fd_pr
 
     # Copy SKY130 library
     echo "Copying SKY130 PDK........................."
 
-    sudo mkdir -p /usr/share/local/
-    sudo mv sky130_fd_pr /usr/share/local/
+     mkdir -p /usr/share/local/
+     mv sky130_fd_pr /usr/share/local/
 
     # Change ownership from root to the user
-    sudo chown -R $USER:$USER /usr/share/local/sky130_fd_pr/
+     chown -R $USER:$USER /usr/share/local/sky130_fd_pr/
 
 }
 
@@ -112,13 +112,13 @@ function installKicad
     findppa=$(grep -h -r "^deb.*$kicadppa*" /etc/apt/sources.list* > /dev/null 2>&1 || test $? = 1)
     if [ -z "$findppa" ]; then
         echo "Adding KiCad-6 ppa to local apt-repository"
-        sudo add-apt-repository -y ppa:kicad/kicad-6.0-releases
-        sudo apt-get update
+         add-apt-repository -y ppa:kicad/kicad-6.0-releases
+         apt-get update
     else
         echo "KiCad-6 is available in synaptic"
     fi
 
-    sudo apt-get install -y --no-install-recommends kicad kicad-footprints kicad-libraries kicad-symbols kicad-templates
+     apt-get install -y --no-install-recommends kicad kicad-footprints kicad-libraries kicad-symbols kicad-templates
 
 }
 
@@ -131,13 +131,13 @@ function installDependency
 
     # Update apt repository
     echo "Updating apt index files..................."
-    sudo apt-get update
+     apt-get update
     
     set -e      # Re-enable exit on error
     trap error_exit ERR
     
     echo "Instaling virtualenv......................."
-    sudo apt install python3-virtualenv
+     apt install python3-virtualenv
    
     echo "Creating virtual environment to isolate packages "
     virtualenv $config_dir/env
@@ -149,23 +149,23 @@ function installDependency
     pip install --upgrade pip
     
     echo "Installing Xterm..........................."
-    sudo apt-get install -y xterm
+     apt-get install -y xterm
     
     echo "Installing Psutil.........................."
-    sudo apt-get install -y python3-psutil
+     apt-get install -y python3-psutil
     
     echo "Installing PyQt5..........................."
-    sudo apt-get install -y python3-pyqt5
+     apt-get install -y python3-pyqt5
 
     echo "Installing Matplotlib......................"
-    sudo apt-get install -y python3-matplotlib
+     apt-get install -y python3-matplotlib
 
     echo "Installing Distutils......................."
-    sudo apt-get install -y python3-distutils
+     apt-get install -y python3-distutils
 
     # Install NgVeri Depedencies
     echo "Installing Pip3............................"
-    sudo apt install -y python3-pip
+     apt install -y python3-pip
 
     echo "Installing Watchdog........................"
     pip3 install watchdog
@@ -209,7 +209,7 @@ function copyKicadLibrary
     echo "symbol table copied in the directory"
 
     # Copy KiCad symbols made for eSim
-    sudo cp -r kicadLibrary/eSim-symbols/* /usr/share/kicad/symbols/
+     cp -r kicadLibrary/eSim-symbols/* /usr/share/kicad/symbols/
 
     set +e      # Temporary disable exit on error
     trap "" ERR # Do not trap on error of any command
@@ -221,7 +221,7 @@ function copyKicadLibrary
     trap error_exit ERR
 
     #Change ownership from Root to the User
-    sudo chown -R $USER:$USER /usr/share/kicad/symbols/
+     chown -R $USER:$USER /usr/share/kicad/symbols/
 
 }
 
@@ -236,9 +236,9 @@ function createDesktopStartScript
     echo "python3 Application.py" >> esim-start.sh
 
     # Make it executable
-    sudo chmod 755 esim-start.sh
+     chmod 755 esim-start.sh
     # Copy esim start script
-    sudo cp -vp esim-start.sh /usr/bin/esim
+     cp -vp esim-start.sh /usr/bin/esim
     # Remove local copy of esim start script
     rm esim-start.sh
 
@@ -260,9 +260,9 @@ function createDesktopStartScript
     echo "StartupNotify=true" >> esim.desktop
 
     # Make esim.desktop file executable
-    sudo chmod 755 esim.desktop
+     chmod 755 esim.desktop
     # Copy desktop icon file to share applications
-    sudo cp -vp esim.desktop /usr/share/applications/
+     cp -vp esim.desktop /usr/share/applications/
     # Copy desktop icon file to Desktop
     cp -vp esim.desktop $HOME/Desktop/
 
@@ -378,18 +378,18 @@ elif [ $option == "--uninstall" ];then
     read getConfirmation
     if [ $getConfirmation == "y" -o $getConfirmation == "Y" ];then
         echo "Removing eSim............................"
-        sudo rm -rf $HOME/.esim $HOME/Desktop/esim.desktop /usr/bin/esim /usr/share/applications/esim.desktop
+         rm -rf $HOME/.esim $HOME/Desktop/esim.desktop /usr/bin/esim /usr/share/applications/esim.desktop
         echo "Removing KiCad..........................."
-        sudo apt purge -y kicad kicad-footprints kicad-libraries kicad-symbols kicad-templates
-        sudo rm -rf /usr/share/kicad
-	sudo rm /etc/apt/sources.list.d/kicad*
+         apt purge -y kicad kicad-footprints kicad-libraries kicad-symbols kicad-templates
+         rm -rf /usr/share/kicad
+	 rm /etc/apt/sources.list.d/kicad*
         rm -rf $HOME/.config/kicad/6.0
 
         echo "Removing Virtual env......................."
-        sudo rm -r $config_dir/env
+         rm -r $config_dir/env
 
         echo "Removing SKY130 PDK......................"
-        sudo rm -R /usr/share/local/sky130_fd_pr
+         rm -R /usr/share/local/sky130_fd_pr
 
         echo "Removing NGHDL..........................."
         rm -rf library/modelParamXML/Nghdl/*
